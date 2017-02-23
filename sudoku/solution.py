@@ -32,9 +32,30 @@ def naked_twins(values):
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
-
+    twins = []
     # Find all instances of naked twins
+    for unit in unitlist:
+        found = False
+        for box1 in unit:
+            box1_digit = values[box1]
+            if len(box1_digit) == 2 and not found:
+                for box2 in unit:
+                    box2_digit = values[box2]
+                    if box1 != box2 and box1_digit == box2_digit:
+                        twins.append((box2_digit, unit))
+                        found = True
+                        break
+
     # Eliminate the naked twins as possibilities for their peers
+    for twin in twins:
+        digit = twin[0]
+        unit = twin[1]
+        for box in unit:
+            value = values[box]
+            if value != digit and (digit[0] in value or digit[1] in value):
+                new_value = value.replace(digit[0], '').replace(digit[1], '')
+                values = assign_value(values, box, new_value)
+    return values
 
 def grid_values(grid):
     """
@@ -82,7 +103,7 @@ def eliminate(values):
         digit = values[box]
         for peer in peers[box]:
             value = values[peer].replace(digit, '')
-            assign_value(values, peer, value)
+            values = assign_value(values, peer, value)
     return values
 
 def only_choice(values):
@@ -90,7 +111,7 @@ def only_choice(values):
         for digit in '123456789':
             dplaces = [box for box in unit if digit in values[box]]
             if len(dplaces) == 1:
-                assign_value(values, dplaces[0], digit)
+                values = assign_value(values, dplaces[0], digit)
     return values
 
 def reduce_puzzle(values):
@@ -99,10 +120,12 @@ def reduce_puzzle(values):
         # Check how many boxes have a determined value
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
 
-        # Your code here: Use the Eliminate Strategy
+        # Use the Eliminate Strategy
         values = eliminate(values)
-        # Your code here: Use the Only Choice Strategy
+        # Use the Only Choice Strategy
         values = only_choice(values)
+        # Use the Naked Twins Strategy
+        values = naked_twins(values)
         # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
         # If no new values were added, stop the loop.
@@ -126,7 +149,7 @@ def search(values):
     # one returns a value (not False), return that answer!
     for c in values[m]:
         new_values = values.copy()
-        assign_value(new_values, m, c)
+        new_values = assign_value(new_values, m, c)
         result = search(new_values)
         if result:
             return result
@@ -144,6 +167,7 @@ def solve(grid):
     return search(values)
 
 if __name__ == '__main__':
+    #diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
     display(solve(diag_sudoku_grid))
 
