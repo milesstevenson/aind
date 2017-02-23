@@ -3,11 +3,18 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: *In the space of each unit where two matching box values occur, we use
+the constraint that there cannot be any other boxes belonging to said unit
+which contain either of the digits from the two matching boxes. We iterate
+over each unit to ensure this constraint is enforced throughout the board.*
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: *A collection of diagonal boxes are cached via
+`diagonal_units = [[rows[i]+cols[i] for i in range(9)], [rows[i]+cols[::-1][i] for i in range(9)]]`.
+From here the diagonal units are appended to the list of all existing units, so
+that our constraint of different numbers belonging to each box of a given unit can
+be enforced. Such a constraint is enforced via `only_choice` and `naked_twins`.*
 
 ### Install
 
