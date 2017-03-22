@@ -37,8 +37,8 @@ def custom_score(game, player):
         The heuristic value of the current game state to the specified player.
     """
 
-    # TODO: finish this function!
-    raise NotImplementedError
+    return float(len(game.get_legal_moves(player)))
+
 
 
 class CustomPlayer:
@@ -133,7 +133,7 @@ class CustomPlayer:
             # when the timer gets close to expiring
             if self.iterative:
                 depth = 1
-                while self.time_left() > 0:
+                while True:
                     if self.method == 'minimax':
                         best_move = self.minimax(game, depth)[1]
                     else:
@@ -146,7 +146,7 @@ class CustomPlayer:
                     best_move = self.alphabeta(game, self.search_depth)[1]
         except Timeout:
             # Handle any actions required at timeout, if necessary
-            pass
+            return best_move
 
         # Return the best move from the last completed search iteration
         return best_move
