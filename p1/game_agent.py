@@ -6,7 +6,7 @@ augment the test suite with your own test cases to further test your code.
 You must test your agent's strength against a set of agents with known
 relative strength using tournament.py and include the results in your report.
 """
-import random, operator
+import random, operator, math
 
 
 class Timeout(Exception):
@@ -36,10 +36,74 @@ def custom_score(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
+    heat_map = [
+        [3, 3, 3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 2, 2, 2, 2, 2, 3, 3],
+        [3, 3, 2, 1, 1, 1, 2, 3, 3],
+        [3, 3, 2, 1, 1, 1, 2, 3, 3],
+        [3, 3, 2, 1, 1, 1, 2, 3, 3],
+        [3, 3, 2, 2, 2, 2, 2, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3, 3, 3]
+    ]
+    my_moves = game.get_legal_moves(player)
+    opponent_moves = game.get_legal_moves(game.get_opponent(player))
+    my_loc = game.get_player_location(player)
+    return (len(my_moves) - (2 * len(opponent_moves))) + float(heat_map[my_loc[0]][my_loc[1]])
 
-    return float(len(game.get_legal_moves(player)))
+def chaser_score(game, player):
+    """
+        For this heuristic I chose to use the difference between available moves
+        between each player. The kicker is we use double the number of the opposing
+        player's moves.
 
+        The reasoning behind this was to try to stay as close to the opposing player
+        as possible. Positions which are closest to the opposing player are ranked
+        with a higher score.
 
+        :param game: `isolation.Board`
+            An instance of `isolation.Board` encoding the current state of the
+            game (e.g., player locations and blocked cells).
+
+        :param player: object
+            A player instance in the current game (i.e., an object corresponding to
+            one of the player objects `game.__player_1__` or `game.__player_2__`.)
+
+        :return: float
+            The heuristic value of the current game state to the specified player.
+        """
+    my_moves = game.get_legal_moves(player)
+    opponent_moves = game.get_legal_moves(game.get_opponent(player))
+    return len(my_moves) - (2*len(opponent_moves))
+
+def distance_formula_score(game, player):
+    """
+    For this heuristic I chose to use the two dimensional distance formula.
+
+    d = sqrt((x_1 - x_2) ^2 + (y_1 - y_2)^2)
+
+    The reasoning behind this was the goal of trying to stay as far away from the
+    opponent as possible, on the board. Because this heuristic is a bit naive and
+    one-track minded, the Student Agent can arrive at the dilemma of finding
+    itself trapped in a corner or some space that it is no longer able to move from
+    afterwards, which renders it useless and forces it to forfeit.
+
+    :param game: `isolation.Board`
+        An instance of `isolation.Board` encoding the current state of the
+        game (e.g., player locations and blocked cells).
+
+    :param player: object
+        A player instance in the current game (i.e., an object corresponding to
+        one of the player objects `game.__player_1__` or `game.__player_2__`.)
+
+    :return: float
+        The heuristic value of the current game state to the specified player.
+    """
+    my_location = game.get_player_location(player)
+    their_location = game.get_player_location(game.get_opponent(player))
+    distance = math.sqrt((my_location[0] - their_location[0]) ** 2 + (my_location[1] - their_location[1]) ** 2)
+    return distance
 
 class CustomPlayer:
     """Game-playing agent that chooses a move using your evaluation function
@@ -126,6 +190,7 @@ class CustomPlayer:
         if len(legal_moves) == 0:
             return no_moves
 
+        score = float("-inf")
         try:
             # The search method call (alpha beta or minimax) should happen in
             # here in order to avoid timeout. The try/except block will
@@ -133,17 +198,17 @@ class CustomPlayer:
             # when the timer gets close to expiring
             if self.iterative:
                 depth = 1
-                while True:
+                while score != float("inf"):
                     if self.method == 'minimax':
-                        best_move = self.minimax(game, depth)[1]
+                        score, best_move = self.minimax(game, depth)
                     else:
-                        best_move = self.alphabeta(game, depth)[1]
+                        score, best_move = self.alphabeta(game, depth)
                     depth += 1
             else:
                 if self.method == 'minimax':
-                    best_move = self.minimax(game, self.search_depth)[1]
+                    score, best_move = self.minimax(game, self.search_depth)
                 else:
-                    best_move = self.alphabeta(game, self.search_depth)[1]
+                    score, best_move = self.alphabeta(game, self.search_depth)
         except Timeout:
             # Handle any actions required at timeout, if necessary
             return best_move
