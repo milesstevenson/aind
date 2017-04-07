@@ -36,6 +36,26 @@ def custom_score(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
+    return heat_map_chaser(game, player)
+
+def heat_map_chaser(game, player):
+    """
+        The heuristic enforces chasing its opponent, but additionally
+        uses a heat map that tries its best to keep the player from visiting
+        the center of the map, as it seems the center of the map is an area
+        that leads to a lot of losses in the game tree.
+
+        :param game: `isolation.Board`
+            An instance of `isolation.Board` encoding the current state of the
+            game (e.g., player locations and blocked cells).
+
+        :param player: object
+            A player instance in the current game (i.e., an object corresponding to
+            one of the player objects `game.__player_1__` or `game.__player_2__`.)
+
+        :return: float
+            The heuristic value of the current game state to the specified player.
+    """
     heat_map = [
         [3, 3, 3, 3, 3, 3, 3, 3, 3],
         [3, 3, 3, 3, 3, 3, 3, 3, 3],
