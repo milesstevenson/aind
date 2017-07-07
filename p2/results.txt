@@ -1,0 +1,16 @@
+Submission includes the following files:
+    my_air_cargo_problems.py
+    my_planning_graph.py
+
+Uploading submission...
+[=========================== 29%                             ] 8192/28145[=========================== 58%  ====                       ] 16384/28145[=========================== 87%  ======================     ] 24576/28145[=========================== 100% ===========================] 28145/28145[=========================== 100% ===========================] 28145/28145
+
+Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results... |Waiting for results... /Waiting for results... -Waiting for results... \Waiting for results...Done!
+
+Results:
+--------
+{
+    "error": "{\"msg\": \"The total output length exceeded the limit of 65536 bytes.\"}"
+}
+For help troubleshooting, please see the FAQ:
+ https://project-assistant.udacity.com/faq
